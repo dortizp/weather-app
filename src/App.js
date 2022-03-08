@@ -10,15 +10,19 @@ const api = {
 function App() {
   const [query, setQuery] = useState("");
   const [weather, setWeather] = useState("");
+  const [temperature, setTemperature] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
 
   const getWeather = () => {
     fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
       .then((response) => response.json())
       .then((data) => {
-        // setWeather(data.weather[0].description);
-        setWeather(data.main.temp);
+        setTemperature(data.main.temp);
+        setWeather(data.weather[0].main);
+        setCity(data.name);
+        setCountry(data.sys.country);
         console.log(data);
-        // console.log(data.weather[0].description);
         setQuery("");
       });
   };
@@ -39,15 +43,19 @@ function App() {
             propSearch={handleKeyPress}
           />
         </div>
-        {query !== "undefined" ? <span>{query}</span> : ""}
-        {weather !== "" ? <span>{weather}</span> : ""}
         <div className="location-box">
-          <div className="country">Nigeria, NG</div>
+          {city !== "undefined" ? (
+            <div className="country">
+              {city}, {country}
+            </div>
+          ) : (
+            ""
+          )}
           <div className="date">Saturday 11 November 2021</div>
         </div>
         <div className="weather-box">
-          <div className="temperature">29°C</div>
-          <div className="weather">Clouds</div>
+          <div className="temperature">{Math.round(temperature)}°C</div>
+          <div className="weather">{weather}</div>
         </div>
       </main>
     </div>
